@@ -4,11 +4,15 @@ from Mine import Mine
 
 
 import numpy as np
+
+import sys
+
+sys.setrecursionlimit(2000)
 class Joueur:
     
     def __init__(self):
         
-        self.etat_jeu=" pret a jouer"
+        self.etat_jeu="pret a jouer"
         
 
     def demarrage(self):
@@ -27,11 +31,16 @@ class Joueur:
         
         difficulte=input()
         
-        self.grille=Grille(difficulte)
-
-        grilliade=self.grille
+        if int(difficulte) in [1,2,3]:
         
-        grilliade.afficher_matrice()
+            self.grille=Grille(int(difficulte))
+    
+            grilliade=self.grille
+            
+            grilliade.afficher_matrice()
+        else:
+            
+            self.choix_difficulte()
         
         
     def choix_case_depart(self):
@@ -59,15 +68,19 @@ class Joueur:
         case_dep_y=input()
         
         self.case_depart=Case_normale("decouvert",int(case_dep_x)-1,int(case_dep_y)-1,"Case_normale")
-        
+       
         grilliade.matrice[int(case_dep_x)-1,int(case_dep_y)-1]="X"
         
         grilliade.afficher_matrice()
         
         grilliade.generation_matrice([int(case_dep_x)-1,int(case_dep_y)-1])
         
+        grilliade.faire_zone([int(case_dep_x)-1,int(case_dep_y)-1])
+        grilliade.afficher_matrice()
         
         self.etat_jeu='en jeu'
+        
+#        grilliade.devoiler_matrice()
         
 
         
@@ -89,24 +102,25 @@ class Joueur:
         if difficulte==3:
             maxou=20
         
-        print("Voulez vous mettre un drapeau( mettre 1) ou deminer (mettre 0)")
+        print("Voulez vous mettre un drapeau( mettre 1) ou deminer (mettre 0) ou arreter (mettre 3)")
         action=input()
         
-        if action=='O' or action==0:
+        if action==3 or action=='3':
+            self.etat_jeu='abandon'
+        
+  
+        if action=='O' or action==0 or action=='0':
             
             print("Quelle case voulez vous deminer en x entre 1 et ",maxou)
             
-            x=input()
+            x=int(input())
             
             
             print("Quelle case voulez vous deminer en y entre 1 et ",maxou)
             
-            y=input()
+            y=int(input())
             
             case=[x-1,y-1]
-            
-            
-            
             
             if case in grilliade.liste_bombe:
                 
@@ -137,16 +151,16 @@ class Joueur:
                 grilliade.matrice[x-1,y-1]=count_bombe
                 
                 
-        if action==1:
+        elif action==1 or action=='1':
             
             print("Quelle case voulez vous mettre un drapeau en x entre 1 et ",maxou)
             
-            x=input()
+            x=int(input())
             
             
             print("Quelle case voulez vous mettre un drapeau en y entre 1 et ",maxou)
             
-            y=input()
+            y=int(input())
             
             case=[x-1,y-1]
             
@@ -169,11 +183,14 @@ class Joueur:
         grilliade.afficher_matrice()
         
         # grilliade.devoiler_matrice()
-    
-        r_etat=grilliade.fini_ou_non()
+        if len(np.where(grilliade.matrice=='D'))==len(grilliade.liste_bombe):
+            r_etat=grilliade.fini_ou_non()
         
-        if r_etat==True:
-            self.etat_jeu='gagne'
+            if r_etat==True:
+                self.etat_jeu='gagne'
+                
+            else:
+                self.etat_jeu='perdu'
             
         
     def fini(self):
@@ -187,6 +204,10 @@ class Joueur:
         elif self.etat_jeu=='gagne':
             return True
         
+        elif self.etat_jeu=='abandon':
+            print('vous avez abandonne')
+            return True
+        
         
         else :
             return False
@@ -196,7 +217,7 @@ class Joueur:
         
         
         print('Bienvenue dans le demineur,\n Quelle est votre nom ?')
-        nom=raw_input()
+        nom=input()
         moi=self
         
         self.nom=nom
