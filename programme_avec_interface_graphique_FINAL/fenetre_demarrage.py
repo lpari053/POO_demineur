@@ -1,103 +1,82 @@
-"""""
+"""
 CLASSE FENETRE_DEMARRAGE
 
-Cette classe est la classe qui devra etre lancé pour demarrer le jeu du demineur.
+Cette classe est la classe qui doit être lancée pour démarrer le jeu du démineur.
 
-Elle contient la definiton de la fenetre de depart , 
-                            de la fenetre de jeu , 
-                            de la fenetre final 
-                        mais aussi defini le joueur
+Elle contient la définition de la fenêtre de départ,
+                            de la fenêtre de jeu,
+                            de la fenêtre finale
+                        mais aussi définit le joueur.
 
+Cette classe hérite de la classe QWidget pour hériter des propriétés créant l'interface graphique.
 
-Cette classe herite de la classe QWIdget pour heriter des proprietes créant l'interface graphique
-
-
-Attribut :
+Attributs :
         + joueur
         + fenetre_final
+"""
 
-"""""
-
-#Importation des bibliteque et des fichiers que l'ont a besoin 
-
+# Importation des bibliothèques et des fichiers dont on a besoin
 import sys
 from PyQt5.QtWidgets import QVBoxLayout, QLabel, QWidget, QPushButton, QApplication, QComboBox
 
+from fenetre_jeu import jeu_action      # Importation de la classe qui définit l'interface de la grille de jeu
+from joueur_interface import Joueur     # Importation de la classe qui définit un joueur et ses actions
+from fenetre_fin import final_fenetre   # Importation de la fenêtre finale du jeu
 
-from fenetre_jeu import jeu_action      #Importation de la classe qui defini l'interface de grille de jeu
-from joueur_interface import Joueur                       # Importation de la classe qui definit un joueur et ses actions
-from fenetre_fin import final_fenetre           # Importation de la fenetre final du jeu
-
-
-class FenetreDemarrage(QWidget):                 #Defintion de la classe FenetreDemarrage qui herite de Qwidget
+class FenetreDemarrage(QWidget):                 # Définition de la classe FenetreDemarrage qui hérite de QWidget
     def __init__(self):
-
-        #Heritage des fonctionnalite et attribut de QWidget
+        # Héritage des fonctionnalités et attributs de QWidget
         super().__init__()
 
+        # Définition des attributs de la classe
+        self.joueur = Joueur()    # Initialisation de notre Joueur
+        self.final_window = final_fenetre("")  # Initialisation de notre fenêtre finale qui ne comporte pas encore de score/résultat
 
-        #Definition des attributs de la classe
-
-
-        self.joueur=Joueur()    #Initialisation de notre Joueur
-
-        self.final_window = final_fenetre("")  #Initialisation de notre fenetre final qui ne comporte pas encore de score/resultat
-
-
-        #definition des proprietes de notre fenetre de demarrage : Titre , taille 
-        self.setWindowTitle("Fenetre de Demarrage")
+        # Définition des propriétés de notre fenêtre de démarrage : Titre, taille
+        self.setWindowTitle("Fenêtre de Démarrage")
         self.resize(300, 150)
 
-        #definiton de notre layout vertical pour afficher les label et boutons de notre fenetre 
+        # Définition de notre layout vertical pour afficher les labels et boutons de notre fenêtre
         layout = QVBoxLayout()
 
-        #definiton de notre label d'introduction
-        label = QLabel("BOnjour Bienvenue dans Demineur \n Veuillez choisir une difficulté de jeu:")
+        # Définition de notre label d'introduction
+        label = QLabel("Bonjour, bienvenue dans Démineur.\nVeuillez choisir une difficulté de jeu :")
         layout.addWidget(label)
 
-        #definiton de notre menu deroulant pour choisir la difficulté
+        # Définition de notre menu déroulant pour choisir la difficulté
         qcombo = QComboBox()
-        qcombo.addItems(["Facile", "Moyen", "Difficile"])  #Posiibilite de difficulte
+        qcombo.addItems(["Facile", "Moyen", "Difficile"])  # Possibilités de difficulté
         layout.addWidget(qcombo)
 
-
-        #defintion de notre bouton pour commencer a demarrer le jeu apres choix de la difficulte
-        demarrer_button = QPushButton("Demarrer")
-        demarrer_button.clicked.connect(lambda: self.ouvrir_fenetre_jeu(qcombo.currentIndex()))  #Ajoute d'evenment quand appui bouton
+        # Définition de notre bouton pour commencer à démarrer le jeu après choix de la difficulté
+        demarrer_button = QPushButton("Démarrer")
+        demarrer_button.clicked.connect(lambda: self.ouvrir_fenetre_jeu(qcombo.currentIndex()))  # Ajout d'événement quand appui bouton
         layout.addWidget(demarrer_button)
 
-        #Mise a jour du layout de notre fenetre
+        # Mise à jour du layout de notre fenêtre
         self.setLayout(layout)
 
-
-    #definiton de la fonction quand on appuie sur le bouton demarrer
+    # Définition de la fonction quand on appuie sur le bouton démarrer
     def ouvrir_fenetre_jeu(self, difficulte):
+        # On cache la fenêtre de démarrage
+        self.hide()
 
-        #On cache la fenetre de demarrage
-        self.hide() 
+        # Mise à jour du profil du joueur en lui attribuant la difficulté choisie à l'aide de la fonction définie dans la classe joueur_interface
+        self.joueur.choix_difficulte(int(difficulte) + 1)
 
-        #Mise a joueur du profiul du joeur en lui attribuant la difficulte choisi a l'aide fonction defini dans classe joueur_interface
-        self.joueur.choix_difficulte(int(difficulte)+1)
-
-
-        #Definition de notre fenetre de jeu qui comportera la grille pour pouvoir l'afficher apres l'appui sur bouton et donc choix de la difficulté
-        fenetre_jeu = jeu_action(int(difficulte)+1,self.joueur,self.final_window)
-        #Affichage de notre fenetre de jeu
-        fenetre_jeu.show() 
-
-
+        # Définition de notre fenêtre de jeu qui comportera la grille pour pouvoir l'afficher après l'appui sur le bouton et donc le choix de la difficulté
+        fenetre_jeu = jeu_action(int(difficulte) + 1, self.joueur, self.final_window)
+        # Affichage de notre fenêtre de jeu
+        fenetre_jeu.show()
 
 if __name__ == '__main__':
-
-    #Initialisation de notre application PyQt
+    # Initialisation de notre application PyQt
     app = QApplication(sys.argv)
 
-
-    #Initialisation de notre fenetre de demarrage
-    fenetre_demarrage = FenetreDemarrage()  
-    #Affichage de notre fenetre de demarrage
+    # Initialisation de notre fenêtre de démarrage
+    fenetre_demarrage = FenetreDemarrage()
+    # Affichage de notre fenêtre de démarrage
     fenetre_demarrage.show()
 
-
-    #Mise en place de sortie du code quand ferme application
+    # Mise en place de la sortie du code quand l'application est fermée
     sys.exit(app.exec_())
