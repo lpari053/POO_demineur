@@ -1,8 +1,6 @@
 # POO_demineur
 ### Comment lancer le jeu ?
 
-Pour le jeu sur la console, il faut lancer la classe Joueur.
-
 Pour le programme sur interface graphique final, il faut lancer la classe fenetre_demarrage.
 
 ### Structure
