@@ -4,7 +4,7 @@ Cours PPMD POO
 ### Structure
 
 Le dossier UMLversion 1 contient les diagrammes UML des premiers cours lors de la phase d'analyse.
-![Diagramme de classe final](https://raw.githubusercontent.com/lpari053/POO_demineur/main/UML_version1/diagramme_de_classe_version1.png)
+![Diagramme de classe final](https://raw.githubusercontent.com/lpari053/POO_demineur/main/UML_version1/diagramme_de_classe_version1.PNG)
 
 
 Le diagramme de classe final du code d'interface graphique se trouve à la racine du projet.
