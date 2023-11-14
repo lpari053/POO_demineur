@@ -11,6 +11,8 @@ Le dossier programme_console_intemrediaire est le programme qui se joue sur la c
 
 Le dossier programme_interface_FINAL contient le jeu demineur avec son interface graphique
 
+<img src='diagramme_de_classe_final.png width=50%'
+
 ### Comment lancer le jeu ?
 
 Pour le jeu sur la console il faut lancer la class Joueur
